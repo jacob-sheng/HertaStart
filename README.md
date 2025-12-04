@@ -15,6 +15,14 @@ A modern, customizable browser start page with elegant search experience and per
 
 ## 🚀 Quick Start
 
+### Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/AeroStart)
+
+Click the button above to deploy your own instance of AeroStart to Vercel in minutes.
+
+### Local Development
+
 **Prerequisites:** Node.js 16+
 
 ### Install Dependencies
