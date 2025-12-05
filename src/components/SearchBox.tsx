@@ -78,27 +78,31 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch suggestions immediately without debounce
+  // Fetch suggestions with 100ms debounce
   useEffect(() => {
-    if (query.trim()) {
-      fetchSuggestions(selectedEngine.name, query).then(results => {
-        // Only update if results are different to avoid unnecessary re-renders
-        setSuggestions(prev => {
-          const newSuggestions = results.slice(0, 8);
-          // Trigger animation only when content actually changes
-          if (JSON.stringify(prev) !== JSON.stringify(newSuggestions)) {
-            setAnimationKey(k => k + 1);
-          }
-          return newSuggestions;
+    const timer = setTimeout(() => {
+      if (query.trim()) {
+        fetchSuggestions(selectedEngine.name, query).then(results => {
+          // Only update if results are different to avoid unnecessary re-renders
+          setSuggestions(prev => {
+            const newSuggestions = results.slice(0, 8);
+            // Trigger animation only when content actually changes
+            if (JSON.stringify(prev) !== JSON.stringify(newSuggestions)) {
+              setAnimationKey(k => k + 1);
+            }
+            return newSuggestions;
+          });
+          setShowSuggestions(true);
+          setSelectedIndex(-1);
         });
-        setShowSuggestions(true);
+      } else {
+        setSuggestions([]);
+        setShowSuggestions(false);
         setSelectedIndex(-1);
-      });
-    } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      setSelectedIndex(-1);
-    }
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [query, selectedEngine.name]);
 
   const performSearch = useCallback((text: string) => {
