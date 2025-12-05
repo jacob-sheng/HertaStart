@@ -14,6 +14,7 @@ export const en: Translation = {
   searchHistory: 'Search History',
   backgroundBlur: 'Background Blur',
   searchBoxOpacity: 'Search Box Opacity',
+  maskOpacity: 'Mask Opacity',
 
   // Wallpaper Settings
   wallpaperSettings: 'Wallpaper Settings',

@@ -180,8 +180,8 @@ const WallpaperManager: React.FC<WallpaperManagerProps> = ({ settings, onUpdateS
   }, [settings.customWallpapers]);
 
   return (
-    <div className="space-y-3">
-      <span className="text-white/80 font-light block">{t.wallpaperSettings}</span>
+    <div className="space-y-5">
+      <span className="text-xs font-semibold text-white/50 uppercase tracking-wider block">{t.wallpaperSettings}</span>
 
       {/* Wallpaper grid */}
       <div className="grid grid-cols-3 gap-2">
@@ -231,9 +231,9 @@ const WallpaperManager: React.FC<WallpaperManagerProps> = ({ settings, onUpdateS
         <div className="flex gap-2">
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors text-sm text-white/80 hover:text-white"
+            className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors text-xs text-white/80 hover:text-white"
           >
-            <UploadIcon className="w-4 h-4" />
+            <UploadIcon className="w-3.5 h-3.5" />
             <span>{t.uploadImageVideo}</span>
           </button>
           <input
@@ -249,21 +249,21 @@ const WallpaperManager: React.FC<WallpaperManagerProps> = ({ settings, onUpdateS
         <div className="flex gap-2">
           <div className="relative flex-1">
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">
-              <ImageIcon className="w-4 h-4" />
+              <ImageIcon className="w-3.5 h-3.5" />
             </div>
             <input
               type="text"
               value={customUrl}
               onChange={(e) => setCustomUrl(e.target.value)}
               placeholder={t.enterImageVideoUrl}
-              className="w-full bg-black/20 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:border-white/30 focus:outline-none transition-colors"
+              className="w-full bg-black/20 border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white focus:border-white/30 focus:outline-none transition-colors"
               onKeyDown={(e) => e.key === 'Enter' && handleCustomUrlApply()}
             />
           </div>
           <button
             onClick={handleCustomUrlApply}
             disabled={!customUrl.trim()}
-            className="px-3 py-2 bg-white text-black text-xs font-bold rounded-xl hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-3 py-1.5 bg-white text-black text-xs font-bold rounded-lg hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {t.apply}
           </button>
@@ -278,9 +278,9 @@ const WallpaperManager: React.FC<WallpaperManagerProps> = ({ settings, onUpdateS
               key={fit.value}
               onClick={() => onUpdateSettings({ ...settings, wallpaperFit: fit.value })}
               className={`
-                flex-1 px-3 py-1.5 text-xs rounded-lg whitespace-nowrap transition-colors border
+                flex-1 px-2.5 py-1 text-[10px] uppercase tracking-wide rounded-md whitespace-nowrap transition-colors border
                 ${settings.wallpaperFit === fit.value || (!settings.wallpaperFit && fit.value === 'cover')
-                  ? 'bg-white text-black font-medium border-white'
+                  ? 'bg-white text-black font-bold border-white'
                   : 'bg-transparent text-white/60 border-transparent hover:text-white hover:bg-white/10'}
               `}
             >

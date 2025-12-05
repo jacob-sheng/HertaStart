@@ -37,6 +37,10 @@ const ThemeSettings: React.FC<ThemeSettingsProps> = ({ settings, onUpdateSetting
     onUpdateSettings({ ...settings, searchOpacity: parseFloat(e.target.value) });
   };
 
+  const handleMaskOpacityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onUpdateSettings({ ...settings, maskOpacity: parseFloat(e.target.value) });
+  };
+
   const handleThemeChange = (colorHex: string) => {
     onUpdateSettings({ ...settings, themeColor: colorHex });
   };
@@ -46,15 +50,15 @@ const ThemeSettings: React.FC<ThemeSettingsProps> = ({ settings, onUpdateSetting
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Language Selection */}
-      <div className="space-y-3">
-        <span className="text-white/80 font-light block">{t.language}</span>
+      <div className="space-y-4">
+        <span className="text-xs font-semibold text-white/50 uppercase tracking-wider block">{t.language}</span>
         <div className="flex gap-2">
           <button
             onClick={() => handleLanguageChange('en')}
             className={`
-              flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+              flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200
               ${settings.language === 'en'
                 ? 'bg-white text-black'
                 : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'}
@@ -65,7 +69,7 @@ const ThemeSettings: React.FC<ThemeSettingsProps> = ({ settings, onUpdateSetting
           <button
             onClick={() => handleLanguageChange('zh')}
             className={`
-              flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+              flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200
               ${settings.language === 'zh'
                 ? 'bg-white text-black'
                 : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'}
@@ -77,15 +81,15 @@ const ThemeSettings: React.FC<ThemeSettingsProps> = ({ settings, onUpdateSetting
       </div>
 
       {/* Theme color */}
-      <div className="space-y-3">
-        <span className="text-white/80 font-light block">{t.themeColor}</span>
+      <div className="space-y-4">
+        <span className="text-xs font-semibold text-white/50 uppercase tracking-wider block">{t.themeColor}</span>
         <div className="flex flex-wrap gap-3">
           {THEMES.map((theme) => (
             <button
               key={theme.hex}
               onClick={() => handleThemeChange(theme.hex)}
               className={`
-                w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300
+                w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300
                 ${settings.themeColor === theme.hex ? 'ring-2 ring-white scale-110' : 'hover:scale-110 opacity-80 hover:opacity-100'}
               `}
               style={{ backgroundColor: theme.hex }}
@@ -100,55 +104,55 @@ const ThemeSettings: React.FC<ThemeSettingsProps> = ({ settings, onUpdateSetting
       </div>
 
       {/* Toggle settings */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-white/80 font-light">{t.showSeconds}</span>
+          <span className="text-sm text-white/70">{t.showSeconds}</span>
           <button
             onClick={toggleSeconds}
-            className="w-12 h-6 rounded-full transition-colors duration-300 relative bg-white/10"
+            className="w-10 h-5 rounded-full transition-colors duration-300 relative bg-white/10"
             style={{ backgroundColor: settings.showSeconds ? settings.themeColor : undefined }}
           >
-            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform duration-300 shadow-md ${settings.showSeconds ? 'left-7' : 'left-1'}`} />
+            <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-transform duration-300 shadow-md ${settings.showSeconds ? 'left-6' : 'left-1'}`} />
           </button>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-white/80 font-light">{t.use24HourFormat}</span>
+          <span className="text-sm text-white/70">{t.use24HourFormat}</span>
           <button
             onClick={toggle24Hour}
-            className="w-12 h-6 rounded-full transition-colors duration-300 relative bg-white/10"
+            className="w-10 h-5 rounded-full transition-colors duration-300 relative bg-white/10"
             style={{ backgroundColor: settings.use24HourFormat ? settings.themeColor : undefined }}
           >
-            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform duration-300 shadow-md ${settings.use24HourFormat ? 'left-7' : 'left-1'}`} />
+            <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-transform duration-300 shadow-md ${settings.use24HourFormat ? 'left-6' : 'left-1'}`} />
           </button>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-white/80 font-light">{t.maskBlurEffect}</span>
+          <span className="text-sm text-white/70">{t.maskBlurEffect}</span>
           <button
             onClick={toggleMaskBlur}
-            className="w-12 h-6 rounded-full transition-colors duration-300 relative bg-white/10"
+            className="w-10 h-5 rounded-full transition-colors duration-300 relative bg-white/10"
             style={{ backgroundColor: settings.enableMaskBlur ? settings.themeColor : undefined }}
           >
-            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform duration-300 shadow-md ${settings.enableMaskBlur ? 'left-7' : 'left-1'}`} />
+            <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-transform duration-300 shadow-md ${settings.enableMaskBlur ? 'left-6' : 'left-1'}`} />
           </button>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-white/80 font-light">{t.searchHistory}</span>
+          <span className="text-sm text-white/70">{t.searchHistory}</span>
           <button
             onClick={toggleSearchHistory}
-            className="w-12 h-6 rounded-full transition-colors duration-300 relative bg-white/10"
+            className="w-10 h-5 rounded-full transition-colors duration-300 relative bg-white/10"
             style={{ backgroundColor: settings.enableSearchHistory ? settings.themeColor : undefined }}
           >
-            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform duration-300 shadow-md ${settings.enableSearchHistory ? 'left-7' : 'left-1'}`} />
+            <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-transform duration-300 shadow-md ${settings.enableSearchHistory ? 'left-6' : 'left-1'}`} />
           </button>
         </div>
       </div>
 
       {/* Background blur slider */}
       <div className="space-y-3">
-        <div className="flex justify-between text-sm text-white/60 font-light">
+        <div className="flex justify-between text-xs text-white/50 font-medium uppercase tracking-wider">
           <span>{t.backgroundBlur}</span>
           <span>{settings.backgroundBlur}px</span>
         </div>
@@ -165,7 +169,7 @@ const ThemeSettings: React.FC<ThemeSettingsProps> = ({ settings, onUpdateSetting
 
       {/* Search box opacity slider */}
       <div className="space-y-3">
-        <div className="flex justify-between text-sm text-white/60 font-light">
+        <div className="flex justify-between text-xs text-white/50 font-medium uppercase tracking-wider">
           <span>{t.searchBoxOpacity}</span>
           <span>{Math.round(settings.searchOpacity * 100)}%</span>
         </div>
@@ -176,6 +180,23 @@ const ThemeSettings: React.FC<ThemeSettingsProps> = ({ settings, onUpdateSetting
           step="0.05"
           value={settings.searchOpacity}
           onChange={handleOpacityChange}
+          className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg"
+        />
+      </div>
+
+      {/* Mask opacity slider */}
+      <div className="space-y-3">
+        <div className="flex justify-between text-xs text-white/50 font-medium uppercase tracking-wider">
+          <span>{t.maskOpacity}</span>
+          <span>{Math.round(settings.maskOpacity * 100)}%</span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.05"
+          value={settings.maskOpacity}
+          onChange={handleMaskOpacityChange}
           className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg"
         />
       </div>

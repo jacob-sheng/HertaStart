@@ -7,10 +7,10 @@ export default defineConfig({
     port: 3000,
     host: '0.0.0.0',
     proxy: {
-      '/bilibili': {
+      '/api/bilibili': {
         target: 'https://s.search.bilibili.com',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/bilibili/, '/main/suggest'),
+        rewrite: (path) => path.replace(/^\/api\/bilibili/, '/main/suggest'),
         secure: false,
       }
     }

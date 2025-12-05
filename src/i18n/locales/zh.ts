@@ -14,6 +14,7 @@ export const zh: Translation = {
   searchHistory: '搜索历史记录',
   backgroundBlur: '背景模糊度',
   searchBoxOpacity: '搜索框不透明度',
+  maskOpacity: '遮罩层不透明度',
 
   // Wallpaper Settings
   wallpaperSettings: '壁纸设置',

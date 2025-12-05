@@ -39,7 +39,7 @@ const GlobalContextMenu: React.FC = () => {
       // This allows the event to bubble to React handlers (like SearchBox)
       // which will handle stopping propagation to the App background.
       event.preventDefault();
-      
+
       targetRef.current = inputTarget;
 
       // Calculate position to prevent overflow
@@ -95,7 +95,7 @@ const GlobalContextMenu: React.FC = () => {
       window.HTMLInputElement.prototype,
       "value"
     )?.set;
-    
+
     const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
       window.HTMLTextAreaElement.prototype,
       "value"
@@ -179,7 +179,7 @@ const GlobalContextMenu: React.FC = () => {
       console.error('Failed to paste: ', err);
       showToast(t.cannotReadClipboard, 'error');
     }
-    
+
     setVisible(false);
     element.focus();
   };
@@ -190,7 +190,7 @@ const GlobalContextMenu: React.FC = () => {
     <div
       ref={menuRef}
       className="
-        fixed z-[9999] min-w-[140px] py-1.5
+        fixed z-[9999] min-w-[120px] py-1
         rounded-xl bg-[#1a1a1a]/95 backdrop-blur-xl
         border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.6)]
         animate-in fade-in zoom-in-95 duration-200 origin-top-left
@@ -200,39 +200,39 @@ const GlobalContextMenu: React.FC = () => {
         left: position.x,
       }}
     >
-      <div className="flex flex-col gap-0.5 px-1.5">
+      <div className="flex flex-col gap-0.5 px-1">
         <button
           onClick={handleCopy}
           className="
-            flex items-center gap-3 px-3 py-2 text-sm text-white/90 rounded-lg
+            flex items-center gap-2.5 px-2.5 py-2 text-xs text-white/90 rounded-lg
             hover:bg-white/10 transition-colors w-full text-left group
           "
         >
-          <CopyIcon className="w-4 h-4 text-white/60 group-hover:text-white" />
+          <CopyIcon className="w-3.5 h-3.5 text-white/60 group-hover:text-white" />
           <span>{t.copy}</span>
         </button>
 
         <button
           onClick={handleCut}
           className="
-            flex items-center gap-3 px-3 py-2 text-sm text-white/90 rounded-lg
+            flex items-center gap-2.5 px-2.5 py-2 text-xs text-white/90 rounded-lg
             hover:bg-white/10 transition-colors w-full text-left group
           "
         >
-          <ScissorsIcon className="w-4 h-4 text-white/60 group-hover:text-white" />
+          <ScissorsIcon className="w-3.5 h-3.5 text-white/60 group-hover:text-white" />
           <span>{t.cut}</span>
         </button>
 
-        <div className="h-[1px] bg-white/10 my-1 mx-1" />
+        <div className="h-[1px] bg-white/10 my-0.5 mx-1" />
 
         <button
           onClick={handlePaste}
           className="
-            flex items-center gap-3 px-3 py-2 text-sm text-white/90 rounded-lg
+            flex items-center gap-2.5 px-2.5 py-2 text-xs text-white/90 rounded-lg
             hover:bg-white/10 transition-colors w-full text-left group
           "
         >
-          <ClipboardIcon className="w-4 h-4 text-white/60 group-hover:text-white" />
+          <ClipboardIcon className="w-3.5 h-3.5 text-white/60 group-hover:text-white" />
           <span>{t.paste}</span>
         </button>
       </div>

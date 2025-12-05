@@ -30,6 +30,7 @@ export interface UserSettings {
   themeColor: string;
   searchOpacity: number;
   enableMaskBlur: boolean;
+  maskOpacity: number;
   backgroundUrl: string;
   backgroundType: BackgroundType;
   wallpaperFit: WallpaperFit;
@@ -38,3 +39,5 @@ export interface UserSettings {
   searchHistory: string[];
   language: Language;
 }
+
+export type SettingsSection = 'general' | 'wallpaper' | 'search';

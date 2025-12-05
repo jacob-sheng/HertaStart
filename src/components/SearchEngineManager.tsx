@@ -78,17 +78,17 @@ const SearchEngineManager: React.FC<SearchEngineManagerProps> = ({ settings, onU
     if (!newEngineName.trim() || !newEngineUrl.trim()) return;
 
     const name = newEngineName.trim();
-    
+
     // Check for duplicate name if we are adding new or renaming
     const isRenaming = editingOriginalName && editingOriginalName !== name;
     const isAdding = !editingOriginalName;
-    
+
     if (isAdding || isRenaming) {
-        const exists = settings.searchEngines.some(e => e.name === name);
-        if (exists) {
-            showToast(t.duplicateEngineName, 'error');
-            return;
-        }
+      const exists = settings.searchEngines.some(e => e.name === name);
+      if (exists) {
+        showToast(t.duplicateEngineName, 'error');
+        return;
+      }
     }
 
     const newEngine: SearchEngine = {
@@ -101,21 +101,21 @@ const SearchEngineManager: React.FC<SearchEngineManagerProps> = ({ settings, onU
     let updatedSelected = settings.selectedEngine;
 
     if (editingOriginalName) {
-        // Update existing
-        const index = updatedEngines.findIndex(e => e.name === editingOriginalName);
-        if (index !== -1) {
-            updatedEngines[index] = newEngine;
-        }
+      // Update existing
+      const index = updatedEngines.findIndex(e => e.name === editingOriginalName);
+      if (index !== -1) {
+        updatedEngines[index] = newEngine;
+      }
 
-        // If the edited engine was the selected one, update the selection reference
-        if (settings.selectedEngine === editingOriginalName) {
-            updatedSelected = newEngine.name;
-        }
-        showToast(t.searchEngineUpdated, 'success');
+      // If the edited engine was the selected one, update the selection reference
+      if (settings.selectedEngine === editingOriginalName) {
+        updatedSelected = newEngine.name;
+      }
+      showToast(t.searchEngineUpdated, 'success');
     } else {
-        // Add new
-        updatedEngines.push(newEngine);
-        showToast(t.newSearchEngineAdded, 'success');
+      // Add new
+      updatedEngines.push(newEngine);
+      showToast(t.newSearchEngineAdded, 'success');
     }
 
     onUpdateSettings({
@@ -140,17 +140,17 @@ const SearchEngineManager: React.FC<SearchEngineManagerProps> = ({ settings, onU
   }, []);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-white/40 uppercase tracking-wider">{t.searchEngines}</h3>
+        <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">{t.searchEngines}</span>
         {!isAddingEngine && (
           <button
             onClick={() => {
-                setEditingOriginalName(null);
-                setNewEngineName('');
-                setNewEngineUrl('');
-                setNewEngineIcon('');
-                setIsAddingEngine(true);
+              setEditingOriginalName(null);
+              setNewEngineName('');
+              setNewEngineUrl('');
+              setNewEngineIcon('');
+              setIsAddingEngine(true);
             }}
             className="p-1.5 rounded-full hover:bg-white/10 transition-colors"
             style={{ color: settings.themeColor }}
@@ -171,7 +171,7 @@ const SearchEngineManager: React.FC<SearchEngineManagerProps> = ({ settings, onU
             onDragOver={(e) => handleDragOver(e, index)}
             onDragEnd={handleDragEnd}
             className={`
-              flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 group transition-all duration-200
+              flex items-center justify-between p-2.5 rounded-lg bg-white/5 border border-white/5 group transition-all duration-200
               ${draggedIndex === index ? 'opacity-40 border-dashed border-white/30' : ''}
               ${editingOriginalName === engine.name ? 'ring-1 ring-white/30 bg-white/10' : ''}
             `}
@@ -184,7 +184,7 @@ const SearchEngineManager: React.FC<SearchEngineManagerProps> = ({ settings, onU
 
               <div className="flex flex-col overflow-hidden">
                 <span className="text-sm font-medium text-white/90 truncate">{engine.name}</span>
-                <span className="text-xs text-white/40 truncate font-mono">{engine.urlPattern}</span>
+                <span className="text-[10px] text-white/40 truncate font-mono">{engine.urlPattern}</span>
               </div>
             </div>
 
@@ -236,7 +236,7 @@ const SearchEngineManager: React.FC<SearchEngineManagerProps> = ({ settings, onU
         <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/10 space-y-3 animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-semibold text-white/80">
-                {editingOriginalName ? t.editSearchEngine : t.addCustomEngine}
+              {editingOriginalName ? t.editSearchEngine : t.addCustomEngine}
             </span>
           </div>
           <div className="space-y-1">
@@ -246,7 +246,7 @@ const SearchEngineManager: React.FC<SearchEngineManagerProps> = ({ settings, onU
               value={newEngineName}
               onChange={(e) => setNewEngineName(e.target.value)}
               placeholder="e.g.: Google"
-              className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-white/30 focus:outline-none transition-colors"
+              className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white focus:border-white/30 focus:outline-none transition-colors"
               autoFocus
             />
           </div>
@@ -257,7 +257,7 @@ const SearchEngineManager: React.FC<SearchEngineManagerProps> = ({ settings, onU
               value={newEngineUrl}
               onChange={(e) => setNewEngineUrl(e.target.value)}
               placeholder="https://example.com/search?q="
-              className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-white/30 focus:outline-none transition-colors font-mono"
+              className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white focus:border-white/30 focus:outline-none transition-colors font-mono"
             />
           </div>
           <div className="space-y-1">

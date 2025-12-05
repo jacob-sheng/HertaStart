@@ -14,6 +14,7 @@ export interface Translation {
   searchHistory: string;
   backgroundBlur: string;
   searchBoxOpacity: string;
+  maskOpacity: string;
 
   // Wallpaper Settings
   wallpaperSettings: string;

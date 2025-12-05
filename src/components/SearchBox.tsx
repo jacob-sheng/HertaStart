@@ -35,6 +35,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [animationKey, setAnimationKey] = useState(0);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -77,21 +78,27 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch suggestions with debounce
+  // Fetch suggestions immediately without debounce
   useEffect(() => {
-    const timer = setTimeout(async () => {
-      if (query.trim()) {
-        const results = await fetchSuggestions(selectedEngine.name, query);
-        setSuggestions(results.slice(0, 8));
+    if (query.trim()) {
+      fetchSuggestions(selectedEngine.name, query).then(results => {
+        // Only update if results are different to avoid unnecessary re-renders
+        setSuggestions(prev => {
+          const newSuggestions = results.slice(0, 8);
+          // Trigger animation only when content actually changes
+          if (JSON.stringify(prev) !== JSON.stringify(newSuggestions)) {
+            setAnimationKey(k => k + 1);
+          }
+          return newSuggestions;
+        });
         setShowSuggestions(true);
-      } else {
-        setSuggestions([]);
-        setShowSuggestions(false);
-      }
+        setSelectedIndex(-1);
+      });
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
       setSelectedIndex(-1);
-    }, 200);
-
-    return () => clearTimeout(timer);
+    }
   }, [query, selectedEngine.name]);
 
   const performSearch = useCallback((text: string) => {
@@ -382,30 +389,62 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
       {/* Suggestions / History Dropdown */}
       {((showSuggestions && suggestions.length > 0) || (showHistoryDropdown && history.length > 0)) && (
-        <div className="
-          absolute top-full left-0 right-0 mt-2
-          bg-black/80 backdrop-blur-3xl
-          border border-white/10
-          rounded-2xl shadow-[0_30px_60px_-12px_rgba(0,0,0,0.8)]
-          animate-in fade-in slide-in-from-top-2 duration-300
-          overflow-hidden z-40
-        ">
+        <div
+          key={animationKey}
+          className="
+            absolute top-full left-0 right-0 mt-2
+            bg-black/20 backdrop-blur-2xl
+            border border-white/10
+            rounded-2xl shadow-[0_30px_60px_-12px_rgba(0,0,0,0.8)]
+            overflow-hidden z-40
+            origin-top
+          "
+          style={{
+            animation: 'dropdownSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+          }}
+        >
+          <style>{`
+            @keyframes dropdownSlideIn {
+              from {
+                opacity: 0;
+                transform: translateY(-8px) scaleY(0.95);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0) scaleY(1);
+              }
+            }
+            @keyframes itemFadeIn {
+              from {
+                opacity: 0;
+                transform: translateX(-4px);
+              }
+              to {
+                opacity: 1;
+                transform: translateX(0);
+              }
+            }
+          `}</style>
           {/* Suggestions List */}
           {showSuggestions && suggestions.length > 0 && (
             <div className="flex flex-col gap-0.5 p-2">
               {suggestions.map((suggestion, index) => (
                 <button
-                  key={index}
+                  key={`${animationKey}-${index}`}
                   // Prevent input blur when clicking
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => handleSuggestionClick(suggestion)}
                   onContextMenu={handleElementContextMenu}
                   className={`
                     group relative w-full px-3 py-1 rounded-md text-left flex items-center gap-3 transition-all duration-200 ease-out
-                    ${index === selectedIndex 
-                      ? 'bg-white/10 text-white shadow-sm translate-x-1' 
+                    ${index === selectedIndex
+                      ? 'bg-white/10 text-white shadow-sm translate-x-1'
                       : 'text-white/70 hover:bg-white/5 hover:text-white'}
                   `}
+                  style={{
+                    animation: `itemFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.03}s`,
+                    opacity: 0
+                  }}
                 >
                   <SearchIcon
                     className={`w-4 h-4 transition-all duration-300`}
@@ -428,7 +467,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
               <div className="flex flex-col gap-0.5 px-2">
                 {history.map((item, index) => (
                   <button
-                    key={item + index}
+                    key={`history-${index}`}
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => handleSuggestionClick(item)}
                     onContextMenu={handleElementContextMenu}
@@ -438,6 +477,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
                         ? 'bg-white/10 text-white shadow-sm translate-x-1'
                         : 'text-white/60 hover:bg-white/5 hover:text-white'}
                     `}
+                    style={{
+                      animation: `itemFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.03}s`,
+                      opacity: 0
+                    }}
                   >
                     <HistoryIcon
                       className={`w-4 h-4 transition-all duration-300`}
