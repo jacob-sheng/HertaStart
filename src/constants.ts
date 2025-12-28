@@ -18,12 +18,12 @@ export const PRESET_WALLPAPERS: PresetWallpaper[] = [
   { 
     name: 'Local Image 1', 
     type: 'image', 
-    url: '/IMG_20251114_200602.png' 
+    url: 'https://youke2.picui.cn/s1/2025/12/28/6950b914a37e9.png' 
   },
   { 
     name: 'Local Image 2', 
     type: 'image', 
-    url: '/IMG_20251114_202953.jpeg' 
+    url: 'https://youke2.picui.cn/s1/2025/12/28/6950b910a0f86.jpeg' 
   },
   { 
     name: 'Default', 
