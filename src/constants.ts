@@ -31,6 +31,12 @@ export const PRESET_WALLPAPERS: PresetWallpaper[] = [
     url: 'https://tc-new.z.wiki/autoupload/f/JPb3wcBYRgvdgjBZlDTRdWSEpzNQ5XwArLwhNo1hcymyl5f0KlZfm6UsKj-HyTuv/20250828/JmPj/3840X2160/light-background.png/webp' 
   },
   { 
+    name: 'Bing Daily', 
+    type: 'image', 
+    url: 'https://api.bimg.cc/today?w=1920&h=1080&mkt=zh-CN',
+    thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=200&q=60'
+  },
+  { 
     name: 'Mountains', 
     type: 'image', 
     url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80',
@@ -53,12 +59,6 @@ export const PRESET_WALLPAPERS: PresetWallpaper[] = [
     type: 'video', 
     url: 'https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-the-window-glass-1634-large.mp4',
     thumbnail: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?auto=format&fit=crop&w=200&q=60' 
-  },
-  { 
-    name: 'Bing Daily', 
-    type: 'image', 
-    url: 'https://bing.ioliu.cn/v1/image?rand=1',
-    thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=200&q=60'
   }
 ];
 

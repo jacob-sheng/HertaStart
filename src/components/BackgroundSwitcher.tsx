@@ -83,7 +83,7 @@ export const BackgroundSwitcher: React.FC<BackgroundSwitcherProps> = ({
                 }`}
               >
                 {/* Thumbnail Preview */}
-                <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0 bg-white/10">
+                <div className="w-10 h-10 rounded-md overflow-hidden flex-shrink-0 bg-white/10">
                   <img
                     src={wallpaper.thumbnail || wallpaper.url}
                     alt={wallpaper.name}
