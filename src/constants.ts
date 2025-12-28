@@ -16,12 +16,12 @@ export const DEFAULT_BACKGROUND_IMAGE = "https://picsum.photos/1920/1080?graysca
 
 export const PRESET_WALLPAPERS: PresetWallpaper[] = [
   { 
-    name: 'Local Image 1', 
+    name: 'Dressing', 
     type: 'image', 
     url: 'https://youke2.picui.cn/s1/2025/12/28/6950b914a37e9.png' 
   },
   { 
-    name: 'Local Image 2', 
+    name: 'Mirror', 
     type: 'image', 
     url: 'https://youke2.picui.cn/s1/2025/12/28/6950b910a0f86.jpeg' 
   },
