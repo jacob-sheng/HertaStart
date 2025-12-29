@@ -36,7 +36,7 @@ const DEFAULT_SETTINGS: UserSettings = {
 type ViewMode = 'search' | 'dashboard';
 
 // Mobile wallpaper URL
-const MOBILE_WALLPAPER = 'https://youke2.picui.cn/s1/2025/12/28/6950c40cb25f2.jpeg';
+const MOBILE_WALLPAPER = 'https://i.imgur.com/tzxa6cJ.jpg';
 
 // Check if device is mobile
 const isMobileDevice = () => {

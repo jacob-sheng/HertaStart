@@ -18,12 +18,12 @@ export const PRESET_WALLPAPERS: PresetWallpaper[] = [
   { 
     name: 'Dressing', 
     type: 'image', 
-    url: 'https://youke2.picui.cn/s1/2025/12/28/6950b914a37e9.png' 
+    url: 'https://i.imgur.com/nxE6qOV.jpg' 
   },
   { 
     name: 'Mirror', 
     type: 'image', 
-    url: 'https://youke2.picui.cn/s1/2025/12/28/6950b910a0f86.jpeg' 
+    url: 'https://i.imgur.com/gciF9nR.jpg' 
   },
   { 
     name: 'Default', 
