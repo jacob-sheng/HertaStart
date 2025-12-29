@@ -72,6 +72,9 @@ const App: React.FC = () => {
   // Flag to track if this is the initial mount
   const isInitialMount = useRef(true);
 
+  // Track previous background URL for fade animation
+  const prevBgUrlRef = useRef(settings.backgroundUrl);
+
   // Save settings to Local Storage (skip initial mount)
   useEffect(() => {
     if (isInitialMount.current) {
@@ -83,7 +86,12 @@ const App: React.FC = () => {
 
   // Preload background when URL changes
   useEffect(() => {
-    setBgLoaded(false);
+    // Trigger fade out when background URL changes
+    if (prevBgUrlRef.current !== settings.backgroundUrl) {
+      setBgLoaded(false);
+      prevBgUrlRef.current = settings.backgroundUrl;
+    }
+
     let isMounted = true;
 
     if (settings.backgroundType === 'image') {
@@ -91,13 +99,22 @@ const App: React.FC = () => {
       img.src = settings.backgroundUrl;
       img.onload = () => {
         if (isMounted) {
-          setBgLoaded(true);
+          // Small delay to ensure smooth fade transition
+          setTimeout(() => {
+            if (isMounted) {
+              setBgLoaded(true);
+            }
+          }, 50);
         }
       };
       // Handle error case to avoid stuck loading state
       img.onerror = () => {
         if (isMounted) {
-          setBgLoaded(true);
+          setTimeout(() => {
+            if (isMounted) {
+              setBgLoaded(true);
+            }
+          }, 50);
         }
       };
 
@@ -114,7 +131,11 @@ const App: React.FC = () => {
       // For video, we can consider it "loaded" once it starts playing or immediately
       // depending on desired UX. Here we'll set it true immediately to show the video element
       // which handles its own buffering.
-      setBgLoaded(true);
+      setTimeout(() => {
+        if (isMounted) {
+          setBgLoaded(true);
+        }
+      }, 50);
     }
   }, [settings.backgroundUrl, settings.backgroundType]);
 
@@ -211,10 +232,13 @@ const App: React.FC = () => {
 
           {/* Background Layer */}
           <div
-            className={`absolute inset-0 transition-all duration-700 ease-[cubic-bezier(0.25,0.4,0.25,1)] overflow-hidden ${bgLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute inset-0 overflow-hidden transition-opacity duration-1000 ease-in-out ${bgLoaded ? 'opacity-100' : 'opacity-0'}`}
             style={{
               filter: `blur(${isSearchActive ? settings.backgroundBlur : 0}px)`,
               transform: isSearchActive ? 'scale(1.05)' : 'scale(1)',
+              transitionProperty: 'filter, transform, opacity',
+              transitionDuration: '700ms, 700ms, 1000ms',
+              transitionTimingFunction: 'cubic-bezier(0.25,0.4,0.25,1)',
             }}
           >
             {settings.backgroundType === 'video' ? (
