@@ -6,7 +6,6 @@ import SettingsModal from './components/SettingsModal';
 import SettingsMenu from './components/SettingsMenu';
 import ErrorBoundary from './components/ErrorBoundary';
 import GlobalContextMenu from './components/GlobalContextMenu';
-import BackgroundSwitcher from './components/BackgroundSwitcher';
 import { SettingsIcon } from './components/Icons';
 import { UserSettings, WallpaperFit, SettingsSection } from './types';
 import { PRESET_WALLPAPERS, SEARCH_ENGINES, THEMES } from './constants';
@@ -145,20 +144,6 @@ const App: React.FC = () => {
 
   const handleUpdateHistory = (newHistory: string[]) => {
     setSettings(prev => ({ ...prev, searchHistory: newHistory }));
-  };
-
-  const handleSelectWallpaper = (wallpaper: any) => {
-    setSettings(prev => ({
-      ...prev,
-      backgroundUrl: wallpaper.url,
-      backgroundType: wallpaper.type,
-    }));
-  };
-
-  const getCurrentWallpaper = () => {
-    return PRESET_WALLPAPERS.find(
-      wp => wp.url === settings.backgroundUrl && wp.type === settings.backgroundType
-    );
   };
 
   const getBackgroundStyle = (fit: WallpaperFit): React.CSSProperties => {
@@ -307,15 +292,6 @@ const App: React.FC = () => {
                 />
               </div>
             </ErrorBoundary>
-
-            {/* Background Switcher Button - Bottom Left */}
-            <div className="absolute bottom-6 left-6 animate-in fade-in slide-in-from-left-4 duration-1000 delay-500">
-              <BackgroundSwitcher
-                currentWallpaper={getCurrentWallpaper() || null}
-                onSelect={handleSelectWallpaper}
-                themeColor={settings.themeColor}
-              />
-            </div>
           </div>
 
           {/* 
