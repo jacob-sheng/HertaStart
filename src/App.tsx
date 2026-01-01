@@ -35,7 +35,7 @@ const DEFAULT_SETTINGS: UserSettings = {
 type ViewMode = 'search' | 'dashboard';
 
 // Mobile wallpaper URL
-const MOBILE_WALLPAPER = 'https://i.postimg.cc/1z8DSYSY/IMG-20251114-201.jpg';
+const MOBILE_WALLPAPER = 'https://s3.bmp.ovh/imgs/2026/01/01/a658b942216163d4.jpeg';
 
 // Check if device is mobile
 const isMobileDevice = () => {
