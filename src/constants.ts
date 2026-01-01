@@ -18,12 +18,12 @@ export const PRESET_WALLPAPERS: PresetWallpaper[] = [
   { 
     name: 'Dressing', 
     type: 'image', 
-    url: 'https://i.imgur.com/nxE6qOV.jpg' 
+    url: 'https://i.postimg.cc/9fDy2N2k/IMG-20251114-200602-(da).png' 
   },
   { 
     name: 'Mirror', 
     type: 'image', 
-    url: 'https://i.imgur.com/gciF9nR.jpg' 
+    url: 'https://i.postimg.cc/xdXLQFQp/IMG-20251114-202953-(da).jpg' 
   },
   { 
     name: 'Default', 
