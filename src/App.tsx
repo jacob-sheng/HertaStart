@@ -295,7 +295,7 @@ const App: React.FC = () => {
 
             {/* Blog Link Button - Top Right */}
             <a
-              href="https://ayn.us.ci"
+              href="https://herta.py.kg"
               target="_blank"
               rel="noopener noreferrer"
               className="absolute top-6 right-6 z-40 group"
