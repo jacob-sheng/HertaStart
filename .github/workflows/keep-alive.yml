@@ -1,0 +1,39 @@
+name: Keep Alive
+
+# 每3天运行一次（世界协调时 00:00）
+on:
+  schedule:
+    - cron: '0 0 */3 * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 更新计数器
+        run: |
+          # 创建计数器文件（如果不存在）
+          if [ ! -f "KEEP_ALIVE_COUNTER" ]; then
+            echo "0" > KEEP_ALIVE_COUNTER
+          fi
+          
+          # 读取当前值并加一
+          CURRENT=$(cat KEEP_ALIVE_COUNTER)
+          NEW_VALUE=$((CURRENT + 1))
+          echo $NEW_VALUE > KEEP_ALIVE_COUNTER
+          
+          echo "计数器已从 $CURRENT 更新到 $NEW_VALUE"
+
+      - name: 提交更改
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add KEEP_ALIVE_COUNTER
+          git commit -m "chore: keep alive - counter update [skip ci]" || echo "没有更改需要提交"
+          git push
