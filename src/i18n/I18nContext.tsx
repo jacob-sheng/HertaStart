@@ -1,5 +1,6 @@
-import React, { createContext, useContext, ReactNode } from 'react';
-import { Language, Translation } from './types';
+import type { ReactNode } from 'react';
+import React, { createContext, useContext } from 'react';
+import type { Language, Translation } from './types';
 import { en } from './locales/en';
 import { zh } from './locales/zh';
 

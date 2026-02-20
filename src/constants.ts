@@ -1,5 +1,9 @@
+import type { PresetWallpaper, SearchEngine, UserSettings } from './types';
 
-import { SearchEngine, PresetWallpaper } from './types';
+const localLightBackgroundUrl = new URL(
+  './assets/images/light-background.webp',
+  import.meta.url
+).href;
 
 // Inlined SVG icons to avoid module resolution issues
 const googleIcon = `<svg t="1764829226293" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2463" width="200" height="200"><path d="M214.101333 512c0-32.512 5.546667-63.701333 15.36-92.928L57.173333 290.218667A491.861333 491.861333 0 0 0 4.693333 512c0 79.701333 18.858667 154.88 52.394667 221.610667l172.202667-129.066667A290.56 290.56 0 0 1 214.101333 512" fill="#FBBC05" p-id="2464"></path><path d="M516.693333 216.192c72.106667 0 137.258667 25.002667 188.458667 65.962667L854.101333 136.533333C763.349333 59.178667 646.997333 11.392 516.693333 11.392c-202.325333 0-376.234667 113.28-459.52 278.826667l172.373334 128.853333c39.68-118.016 152.832-202.88 287.146666-202.88" fill="#EA4335" p-id="2465"></path><path d="M516.693333 807.808c-134.357333 0-247.509333-84.864-287.232-202.88l-172.288 128.853333c83.242667 165.546667 257.152 278.826667 459.52 278.826667 124.842667 0 244.053333-43.392 333.568-124.757333l-163.584-123.818667c-46.122667 28.458667-104.234667 43.776-170.026666 43.776" fill="#34A853" p-id="2466"></path><path d="M1005.397333 512c0-29.568-4.693333-61.44-11.648-91.008H516.650667V614.4h274.602666c-13.696 65.962667-51.072 116.650667-104.533333 149.632l163.541333 123.818667c93.994667-85.418667 155.136-212.650667 155.136-375.850667" fill="#4285F4" p-id="2467"></path></svg>`;
@@ -12,65 +16,75 @@ const duckduckgoIcon = `<svg t="1764829739655" class="icon" viewBox="0 0 1024 10
 
 const bilibiliIcon = `<svg t="1733289600000" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5088" width="200" height="200"><path d="M306.005333 117.632L444.330667 256h135.296l138.368-138.325333a42.666667 42.666667 0 0 1 60.373333 60.373333L700.330667 256H789.333333A149.333333 149.333333 0 0 1 938.666667 405.333333v341.333334a149.333333 149.333333 0 0 1-149.333334 149.333333h-554.666666A149.333333 149.333333 0 0 1 85.333333 746.666667v-341.333334A149.333333 149.333333 0 0 1 234.666667 256h88.96L245.632 177.962667a42.666667 42.666667 0 0 1 60.373333-60.373334zM789.333333 341.333333h-554.666666a64 64 0 0 0-63.701334 57.856L170.666667 405.333333v341.333334a64 64 0 0 0 57.856 63.701333L234.666667 810.666667h554.666666a64 64 0 0 0 63.701334-57.856L853.333333 746.666667v-341.333334A64 64 0 0 0 789.333333 341.333333zM341.333333 469.333333a42.666667 42.666667 0 0 1 42.666667 42.666667v85.333333a42.666667 42.666667 0 0 1-85.333333 0v-85.333333a42.666667 42.666667 0 0 1 42.666666-42.666667z m341.333334 0a42.666667 42.666667 0 0 1 42.666666 42.666667v85.333333a42.666667 42.666667 0 0 1-85.333333 0v-85.333333a42.666667 42.666667 0 0 1 42.666667-42.666667z" fill="#00A1D6" p-id="5089"></path></svg>`;
 
-export const DEFAULT_BACKGROUND_IMAGE = "https://picsum.photos/1920/1080?grayscale&blur=2";
+export const DEFAULT_BACKGROUND_IMAGE =
+  localLightBackgroundUrl;
 
 export const PRESET_WALLPAPERS: PresetWallpaper[] = [
-  { 
-    name: 'Default', 
-    type: 'image', 
-    url: 'https://tc-new.z.wiki/autoupload/f/JPb3wcBYRgvdgjBZlDTRdWSEpzNQ5XwArLwhNo1hcymyl5f0KlZfm6UsKj-HyTuv/20250828/JmPj/3840X2160/light-background.png/webp' 
+  {
+    id: 'default',
+    name: 'Default',
+    type: 'image',
+    url: localLightBackgroundUrl,
   },
-  { 
-    name: 'Mountains', 
-    type: 'image', 
+  {
+    id: 'mountains',
+    name: 'Mountains',
+    type: 'image',
     url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80',
-    thumbnail: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=200&q=60'
+    thumbnail:
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=200&q=60',
   },
-  { 
-    name: 'Nebula', 
-    type: 'image', 
+  {
+    id: 'nebula',
+    name: 'Nebula',
+    type: 'image',
     url: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1920&q=80',
-    thumbnail: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=200&q=60'
+    thumbnail:
+      'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=200&q=60',
   },
-  { 
-    name: 'City', 
-    type: 'image', 
+  {
+    id: 'city',
+    name: 'City',
+    type: 'image',
     url: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1920&q=80',
-    thumbnail: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=200&q=60'
+    thumbnail:
+      'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=200&q=60',
   },
-  { 
-    name: 'Rain', 
-    type: 'video', 
+  {
+    id: 'rain-video',
+    name: 'Rain',
+    type: 'video',
     url: 'https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-the-window-glass-1634-large.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?auto=format&fit=crop&w=200&q=60' 
-  }
+    thumbnail:
+      'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?auto=format&fit=crop&w=200&q=60',
+  },
 ];
 
 export const SEARCH_ENGINES: SearchEngine[] = [
   {
     name: 'Google',
-    urlPattern: 'https://www.google.com/search?q=',
-    icon: googleIcon
+    urlPattern: 'https://www.google.com/search?q=%s',
+    icon: googleIcon,
   },
   {
     name: 'Baidu',
-    urlPattern: 'https://www.baidu.com/s?wd=',
-    icon: baiduIcon
+    urlPattern: 'https://www.baidu.com/s?wd=%s',
+    icon: baiduIcon,
   },
   {
     name: 'Bing',
-    urlPattern: 'https://www.bing.com/search?q=',
-    icon: bingIcon
+    urlPattern: 'https://www.bing.com/search?q=%s',
+    icon: bingIcon,
   },
   {
     name: 'DuckDuckGo',
-    urlPattern: 'https://duckduckgo.com/?q=',
-    icon: duckduckgoIcon
+    urlPattern: 'https://duckduckgo.com/?q=%s',
+    icon: duckduckgoIcon,
   },
   {
     name: 'Bilibili',
-    urlPattern: 'https://search.bilibili.com/all?keyword=',
-    icon: bilibiliIcon
+    urlPattern: 'https://search.bilibili.com/all?keyword=%s',
+    icon: bilibiliIcon,
   },
 ];
 
@@ -83,6 +97,23 @@ export const THEMES = [
   { name: 'Cyan Future', hex: '#06b6d4' },
   { name: 'Crimson Red', hex: '#ef4444' },
   { name: 'Golden', hex: '#eab308' },
-];
+] as const;
 
-export const ANIMATION_DURATION = "duration-500 ease-out";
+export const DEFAULT_SETTINGS: UserSettings = {
+  use24HourFormat: true,
+  showSeconds: true,
+  backgroundBlur: 8,
+  searchEngines: SEARCH_ENGINES,
+  selectedEngine: SEARCH_ENGINES[0].name,
+  themeColor: THEMES[0].hex,
+  searchOpacity: 0.8,
+  enableMaskBlur: false,
+  maskOpacity: 0.2,
+  backgroundUrl: PRESET_WALLPAPERS[0].url,
+  backgroundType: PRESET_WALLPAPERS[0].type,
+  wallpaperFit: 'cover',
+  customWallpapers: [],
+  enableSearchHistory: true,
+  searchHistory: [],
+  language: 'en',
+};

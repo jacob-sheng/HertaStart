@@ -78,17 +78,18 @@ pnpm build
 
 ```
 AeroStart/
-├── components/          # React components
-│   ├── Clock.tsx       # Clock component
-│   ├── SearchBox.tsx   # Search box component
-│   ├── SettingsModal.tsx # Settings panel
-│   └── ...
-├── utils/              # Utility functions
-├── context/            # React Context
-├── constants.ts        # Constants configuration
-├── types.ts           # TypeScript type definitions
-├── App.tsx            # Main application component
-└── index.tsx          # Application entry point
+├── src/
+│   ├── components/      # UI components
+│   ├── config/          # Search engine provider configs
+│   ├── context/         # Toast context
+│   ├── state/           # Global settings store
+│   ├── utils/           # Storage and suggestion utilities
+│   ├── constants.ts     # Defaults and static data
+│   ├── types.ts         # Shared domain types
+│   ├── App.tsx          # App composition entry
+│   └── index.tsx        # React bootstrap
+├── eslint.config.js     # ESLint flat config
+└── tailwind.config.ts   # Tailwind scan configuration
 ```
 
 ## 📄 License

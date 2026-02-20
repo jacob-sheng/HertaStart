@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { SettingsIcon, ImageIcon, SearchIcon } from './Icons';
-import { SettingsSection } from '../types';
+import type { SettingsSection } from '../types';
 import { useTranslation } from '../i18n';
 
 interface SettingsMenuProps {

@@ -1,52 +1,52 @@
 
 import React from 'react';
 import { CheckIcon } from './Icons';
-import { UserSettings, Language } from '../types';
+import type { UserSettings, Language, UpdateSettings } from '../types';
 import { THEMES } from '../constants';
 import { useTranslation } from '../i18n';
 
 interface ThemeSettingsProps {
   settings: UserSettings;
-  onUpdateSettings: (newSettings: UserSettings) => void;
+  onUpdateSettings: UpdateSettings;
 }
 
 const ThemeSettings: React.FC<ThemeSettingsProps> = ({ settings, onUpdateSettings }) => {
   const { t } = useTranslation();
 
   const toggleSeconds = () => {
-    onUpdateSettings({ ...settings, showSeconds: !settings.showSeconds });
+    onUpdateSettings({ showSeconds: !settings.showSeconds });
   };
 
   const toggleMaskBlur = () => {
-    onUpdateSettings({ ...settings, enableMaskBlur: !settings.enableMaskBlur });
+    onUpdateSettings({ enableMaskBlur: !settings.enableMaskBlur });
   };
 
   const toggle24Hour = () => {
-    onUpdateSettings({ ...settings, use24HourFormat: !settings.use24HourFormat });
+    onUpdateSettings({ use24HourFormat: !settings.use24HourFormat });
   };
 
   const toggleSearchHistory = () => {
-    onUpdateSettings({ ...settings, enableSearchHistory: !settings.enableSearchHistory });
+    onUpdateSettings({ enableSearchHistory: !settings.enableSearchHistory });
   };
 
   const handleBlurChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onUpdateSettings({ ...settings, backgroundBlur: parseInt(e.target.value) });
+    onUpdateSettings({ backgroundBlur: Number(e.target.value) });
   };
 
   const handleOpacityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onUpdateSettings({ ...settings, searchOpacity: parseFloat(e.target.value) });
+    onUpdateSettings({ searchOpacity: Number(e.target.value) });
   };
 
   const handleMaskOpacityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onUpdateSettings({ ...settings, maskOpacity: parseFloat(e.target.value) });
+    onUpdateSettings({ maskOpacity: Number(e.target.value) });
   };
 
   const handleThemeChange = (colorHex: string) => {
-    onUpdateSettings({ ...settings, themeColor: colorHex });
+    onUpdateSettings({ themeColor: colorHex });
   };
 
   const handleLanguageChange = (lang: Language) => {
-    onUpdateSettings({ ...settings, language: lang });
+    onUpdateSettings({ language: lang });
   };
 
   return (

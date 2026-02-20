@@ -1,4 +1,6 @@
-export type Language = 'en' | 'zh';
+import type { Language } from '../types';
+
+export type { Language };
 
 export interface Translation {
   // Common
@@ -76,6 +78,7 @@ export interface Translation {
   invalidUrlFormat: string;
   unsupportedProtocol: string;
   invalidSearchUrl: string;
+  invalidSvgIcon: string;
   copyFailed: string;
   cutFailed: string;
   cannotReadClipboard: string;

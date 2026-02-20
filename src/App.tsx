@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Clock from './components/Clock';
 import SearchBox from './components/SearchBox';
 import SettingsModal from './components/SettingsModal';
@@ -7,34 +7,15 @@ import SettingsMenu from './components/SettingsMenu';
 import ErrorBoundary from './components/ErrorBoundary';
 import GlobalContextMenu from './components/GlobalContextMenu';
 import { SettingsIcon } from './components/Icons';
-import { UserSettings, WallpaperFit, SettingsSection } from './types';
-import { PRESET_WALLPAPERS, SEARCH_ENGINES, THEMES } from './constants';
-import { loadSettings, saveSettings } from './utils/storage';
+import type { Language, SettingsSection, WallpaperFit } from './types';
 import { I18nProvider } from './i18n';
-
-// Default settings - moved outside component to avoid recreation on each render
-const DEFAULT_SETTINGS: UserSettings = {
-  use24HourFormat: true,
-  showSeconds: true,
-  backgroundBlur: 8,
-  searchEngines: [...SEARCH_ENGINES],
-  selectedEngine: SEARCH_ENGINES[0].name,
-  themeColor: THEMES[0].hex,
-  searchOpacity: 0.8,
-  enableMaskBlur: false,
-  maskOpacity: 0.2,
-  backgroundUrl: PRESET_WALLPAPERS[0].url,
-  backgroundType: PRESET_WALLPAPERS[0].type,
-  wallpaperFit: 'cover',
-  customWallpapers: [],
-  enableSearchHistory: true,
-  searchHistory: [],
-  language: 'en'
-};
+import { useSettingsStore } from './state/useSettingsStore';
 
 type ViewMode = 'search' | 'dashboard';
 
 const App: React.FC = () => {
+  const { settings, updateSettings } = useSettingsStore();
+
   // State for settings visibility
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
@@ -48,21 +29,6 @@ const App: React.FC = () => {
 
   // State for search box interaction (controls background blur)
   const [isSearchActive, setIsSearchActive] = useState(false);
-
-  // Application Settings - loaded from Local Storage
-  const [settings, setSettings] = useState<UserSettings>(() => loadSettings(DEFAULT_SETTINGS));
-
-  // Flag to track if this is the initial mount
-  const isInitialMount = useRef(true);
-
-  // Save settings to Local Storage (skip initial mount)
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    saveSettings(settings);
-  }, [settings]);
 
   // Preload background when URL changes
   useEffect(() => {
@@ -102,11 +68,11 @@ const App: React.FC = () => {
   }, [settings.backgroundUrl, settings.backgroundType]);
 
   const handleSelectEngine = (name: string) => {
-    setSettings(prev => ({ ...prev, selectedEngine: name }));
+    updateSettings({ selectedEngine: name });
   };
 
   const handleUpdateHistory = (newHistory: string[]) => {
-    setSettings(prev => ({ ...prev, searchHistory: newHistory }));
+    updateSettings({ searchHistory: newHistory });
   };
 
   const getBackgroundStyle = (fit: WallpaperFit): React.CSSProperties => {
@@ -151,14 +117,14 @@ const App: React.FC = () => {
   };
 
   // Handle left-click on the dashboard to return to Search
-  const handleDashboardClick = (e: React.MouseEvent) => {
+  const handleDashboardClick = () => {
     if (viewMode === 'dashboard' && !isSettingsOpen) {
       setViewMode('search');
     }
   };
 
-  const handleLanguageChange = (lang: 'en' | 'zh') => {
-    setSettings(prev => ({ ...prev, language: lang }));
+  const handleLanguageChange = (lang: Language) => {
+    updateSettings({ language: lang });
   };
 
   const handleSettingsMenuSelect = (section: SettingsSection) => {
@@ -303,7 +269,7 @@ const App: React.FC = () => {
               isOpen={isSettingsOpen}
               onClose={() => setIsSettingsOpen(false)}
               settings={settings}
-              onUpdateSettings={setSettings}
+              onUpdateSettings={updateSettings}
               section={activeSettingsSection}
             />
           </ErrorBoundary>

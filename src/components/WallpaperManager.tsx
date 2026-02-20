@@ -1,13 +1,19 @@
 import React, { useRef, useMemo, useCallback } from 'react';
 import { TrashIcon, UploadIcon, ImageIcon, CheckIcon } from './Icons';
-import { UserSettings, PresetWallpaper, BackgroundType, WallpaperFit } from '../types';
+import type {
+  UserSettings,
+  PresetWallpaper,
+  BackgroundType,
+  WallpaperFit,
+  UpdateSettings,
+} from '../types';
 import { PRESET_WALLPAPERS } from '../constants';
 import { useToast } from '../context/ToastContext';
 import { useTranslation } from '../i18n';
 
 interface WallpaperManagerProps {
   settings: UserSettings;
-  onUpdateSettings: (newSettings: UserSettings) => void;
+  onUpdateSettings: UpdateSettings;
 }
 
 const WallpaperManager: React.FC<WallpaperManagerProps> = ({ settings, onUpdateSettings }) => {
@@ -25,13 +31,9 @@ const WallpaperManager: React.FC<WallpaperManagerProps> = ({ settings, onUpdateS
   ];
 
   const handlePresetWallpaper = useCallback((preset: PresetWallpaper) => {
-    onUpdateSettings({
-      ...settings,
-      backgroundUrl: preset.url,
-      backgroundType: preset.type
-    });
+    onUpdateSettings({ backgroundUrl: preset.url, backgroundType: preset.type });
     // Optional: showToast(`已应用壁纸: ${preset.name}`, 'success');
-  }, [settings, onUpdateSettings]);
+  }, [onUpdateSettings]);
 
   const handleCustomUrlApply = useCallback(() => {
     if (!customUrl.trim()) return;
@@ -60,16 +62,15 @@ const WallpaperManager: React.FC<WallpaperManagerProps> = ({ settings, onUpdateS
       isCustom: true
     };
 
-    onUpdateSettings({
-      ...settings,
+    onUpdateSettings((current) => ({
       backgroundUrl: newWallpaper.url,
       backgroundType: newWallpaper.type,
-      customWallpapers: [...settings.customWallpapers, newWallpaper]
-    });
+      customWallpapers: [...current.customWallpapers, newWallpaper],
+    }));
 
     setCustomUrl('');
     showToast(t.customWallpaperApplied, 'success');
-  }, [customUrl, settings, onUpdateSettings, showToast, t]);
+  }, [customUrl, onUpdateSettings, showToast, t]);
 
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -129,12 +130,11 @@ const WallpaperManager: React.FC<WallpaperManagerProps> = ({ settings, onUpdateS
       };
 
       try {
-        onUpdateSettings({
-          ...settings,
+        onUpdateSettings((current) => ({
           backgroundUrl: base64Url,
           backgroundType: type,
-          customWallpapers: [...settings.customWallpapers, newWallpaper]
-        });
+          customWallpapers: [...current.customWallpapers, newWallpaper],
+        }));
         showToast(t.wallpaperUploaded, 'success');
       } catch (error) {
         showToast(t.storageFull, 'error', 5000);
@@ -167,10 +167,9 @@ const WallpaperManager: React.FC<WallpaperManagerProps> = ({ settings, onUpdateS
     }
 
     onUpdateSettings({
-      ...settings,
       customWallpapers: newCustomWallpapers,
       backgroundUrl: newBgUrl,
-      backgroundType: newBgType
+      backgroundType: newBgType,
     });
     showToast(t.wallpaperDeleted, 'info');
   }, [settings, onUpdateSettings, showToast, t]);
@@ -276,7 +275,7 @@ const WallpaperManager: React.FC<WallpaperManagerProps> = ({ settings, onUpdateS
           {WALLPAPER_FITS.map((fit) => (
             <button
               key={fit.value}
-              onClick={() => onUpdateSettings({ ...settings, wallpaperFit: fit.value })}
+              onClick={() => onUpdateSettings({ wallpaperFit: fit.value })}
               className={`
                 flex-1 px-2.5 py-1 text-[10px] uppercase tracking-wide rounded-md whitespace-nowrap transition-colors border
                 ${settings.wallpaperFit === fit.value || (!settings.wallpaperFit && fit.value === 'cover')
