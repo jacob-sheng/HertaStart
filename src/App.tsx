@@ -1,36 +1,14 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Clock from './components/Clock';
 import SearchBox from './components/SearchBox';
 import SettingsModal from './components/SettingsModal';
 import SettingsMenu from './components/SettingsMenu';
 import ErrorBoundary from './components/ErrorBoundary';
 import GlobalContextMenu from './components/GlobalContextMenu';
-import { SettingsIcon, BlogIcon } from './components/Icons';
-import { UserSettings, WallpaperFit, SettingsSection } from './types';
-import { PRESET_WALLPAPERS, SEARCH_ENGINES, THEMES } from './constants';
-import { loadSettings, saveSettings } from './utils/storage';
+import { BlogIcon, SettingsIcon } from './components/Icons';
+import type { Language, SettingsSection, WallpaperFit } from './types';
 import { I18nProvider } from './i18n';
-
-// Default settings - moved outside component to avoid recreation on each render
-const DEFAULT_SETTINGS: UserSettings = {
-  use24HourFormat: true,
-  showSeconds: true,
-  backgroundBlur: 8,
-  searchEngines: [...SEARCH_ENGINES],
-  selectedEngine: SEARCH_ENGINES[0].name,
-  themeColor: THEMES[1].hex,
-  searchOpacity: 0.8,
-  enableMaskBlur: false,
-  maskOpacity: 0.2,
-  backgroundUrl: PRESET_WALLPAPERS[0].url,
-  backgroundType: PRESET_WALLPAPERS[0].type,
-  wallpaperFit: 'cover',
-  customWallpapers: [],
-  enableSearchHistory: true,
-  searchHistory: [],
-  language: 'en'
-};
+import { useSettingsStore } from './state/useSettingsStore';
 
 type ViewMode = 'search' | 'dashboard';
 
@@ -59,31 +37,19 @@ const App: React.FC = () => {
   // State for search box interaction (controls background blur)
   const [isSearchActive, setIsSearchActive] = useState(false);
 
-  // Application Settings - loaded from Local Storage
-  const [settings, setSettings] = useState<UserSettings>(() => {
-    const loadedSettings = loadSettings(DEFAULT_SETTINGS);
-    // Apply mobile wallpaper if on mobile device
-    if (isMobileDevice()) {
-      loadedSettings.backgroundUrl = MOBILE_WALLPAPER;
-      loadedSettings.backgroundType = 'image';
+  // Force mobile wallpaper on first mount
+  useEffect(() => {
+    if (!isMobileDevice()) {
+      return;
     }
-    return loadedSettings;
-  });
-
-  // Flag to track if this is the initial mount
-  const isInitialMount = useRef(true);
+    updateSettings({
+      backgroundUrl: MOBILE_WALLPAPER,
+      backgroundType: 'image',
+    });
+  }, [updateSettings]);
 
   // Track previous background URL for fade animation
   const prevBgUrlRef = useRef(settings.backgroundUrl);
-
-  // Save settings to Local Storage (skip initial mount)
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    saveSettings(settings);
-  }, [settings]);
 
   // Preload background when URL changes
   useEffect(() => {
@@ -95,29 +61,21 @@ const App: React.FC = () => {
 
     let isMounted = true;
 
+    const markLoaded = () => {
+      // Small delay to ensure smooth fade transition
+      setTimeout(() => {
+        if (isMounted) {
+          setBgLoaded(true);
+        }
+      }, 50);
+    };
+
     if (settings.backgroundType === 'image') {
       const img = new Image();
       img.src = settings.backgroundUrl;
-      img.onload = () => {
-        if (isMounted) {
-          // Small delay to ensure smooth fade transition
-          setTimeout(() => {
-            if (isMounted) {
-              setBgLoaded(true);
-            }
-          }, 50);
-        }
-      };
+      img.onload = markLoaded;
       // Handle error case to avoid stuck loading state
-      img.onerror = () => {
-        if (isMounted) {
-          setTimeout(() => {
-            if (isMounted) {
-              setBgLoaded(true);
-            }
-          }, 50);
-        }
-      };
+      img.onerror = markLoaded;
 
       // Cleanup function
       return () => {
@@ -128,16 +86,14 @@ const App: React.FC = () => {
         // Cancel image loading
         img.src = '';
       };
-    } else {
-      // For video, we can consider it "loaded" once it starts playing or immediately
-      // depending on desired UX. Here we'll set it true immediately to show the video element
-      // which handles its own buffering.
-      setTimeout(() => {
-        if (isMounted) {
-          setBgLoaded(true);
-        }
-      }, 50);
     }
+
+    // For video, we can consider it "loaded" once it starts playing or immediately
+    // depending on desired UX. Here we'll set it true shortly after to allow fade transition.
+    markLoaded();
+    return () => {
+      isMounted = false;
+    };
   }, [settings.backgroundUrl, settings.backgroundType]);
 
   const handleSelectEngine = (name: string) => {

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { PresetWallpaper } from '../types';
+import type { PresetWallpaper } from '../types';
 import { PRESET_WALLPAPERS } from '../constants';
 
 interface BackgroundSwitcherProps {
