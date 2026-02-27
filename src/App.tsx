@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Clock from './components/Clock';
 import SearchBox from './components/SearchBox';
 import SettingsModal from './components/SettingsModal';
@@ -43,6 +43,8 @@ const isMobileDevice = () => {
 };
 
 const App: React.FC = () => {
+  const { settings, updateSettings } = useSettingsStore();
+
   // State for settings visibility
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
@@ -139,11 +141,11 @@ const App: React.FC = () => {
   }, [settings.backgroundUrl, settings.backgroundType]);
 
   const handleSelectEngine = (name: string) => {
-    setSettings(prev => ({ ...prev, selectedEngine: name }));
+    updateSettings({ selectedEngine: name });
   };
 
   const handleUpdateHistory = (newHistory: string[]) => {
-    setSettings(prev => ({ ...prev, searchHistory: newHistory }));
+    updateSettings({ searchHistory: newHistory });
   };
 
   const getBackgroundStyle = (fit: WallpaperFit): React.CSSProperties => {
@@ -188,14 +190,14 @@ const App: React.FC = () => {
   };
 
   // Handle left-click on the dashboard to return to Search
-  const handleDashboardClick = (e: React.MouseEvent) => {
+  const handleDashboardClick = () => {
     if (viewMode === 'dashboard' && !isSettingsOpen) {
       setViewMode('search');
     }
   };
 
-  const handleLanguageChange = (lang: 'en' | 'zh') => {
-    setSettings(prev => ({ ...prev, language: lang }));
+  const handleLanguageChange = (lang: Language) => {
+    updateSettings({ language: lang });
   };
 
   const handleSettingsMenuSelect = (section: SettingsSection) => {
@@ -354,7 +356,7 @@ const App: React.FC = () => {
               isOpen={isSettingsOpen}
               onClose={() => setIsSettingsOpen(false)}
               settings={settings}
-              onUpdateSettings={setSettings}
+              onUpdateSettings={updateSettings}
               section={activeSettingsSection}
             />
           </ErrorBoundary>

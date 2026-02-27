@@ -1,4 +1,4 @@
-import { Translation } from '../types';
+import type { Translation } from '../types';
 
 export const zh: Translation = {
   // Common
@@ -76,6 +76,7 @@ export const zh: Translation = {
   invalidUrlFormat: '无效的 URL 格式',
   unsupportedProtocol: '仅支持 HTTP 或 HTTPS 协议的链接',
   invalidSearchUrl: '生成的搜索 URL 无效',
+  invalidSvgIcon: 'SVG 图标代码无效或存在风险',
   copyFailed: '复制失败',
   cutFailed: '剪切失败',
   cannotReadClipboard: '无法读取剪贴板',

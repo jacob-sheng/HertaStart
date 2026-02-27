@@ -1,4 +1,5 @@
-import { UserSettings } from '../types';
+import type { SearchEngine, UserSettings } from '../types';
+import { sanitizeSvgMarkup } from './sanitizeSvg';
 
 const STORAGE_KEY = 'aerostart_settings';
 const DEBOUNCE_DELAY = 100; // 100ms debounce delay
@@ -11,6 +12,50 @@ let debounceTimer: ReturnType<typeof setTimeout> | null = null;
  * @param defaultSettings Default settings
  * @returns Merged user settings
  */
+const normalizeSettings = (
+  defaultSettings: UserSettings,
+  rawSettings: unknown
+): UserSettings => {
+  if (!rawSettings || typeof rawSettings !== 'object') {
+    return defaultSettings;
+  }
+
+  const merged = {
+    ...defaultSettings,
+    ...(rawSettings as Partial<UserSettings>),
+  };
+
+  if (!Array.isArray(merged.searchEngines) || merged.searchEngines.length === 0) {
+    merged.searchEngines = defaultSettings.searchEngines;
+  } else {
+    merged.searchEngines = merged.searchEngines.map((engine) => {
+      const sanitizedIcon = engine.icon ? sanitizeSvgMarkup(engine.icon) : undefined;
+      return {
+        ...engine,
+        icon: sanitizedIcon,
+        iconKey: sanitizedIcon ? undefined : engine.iconKey,
+      } as SearchEngine;
+    });
+  }
+
+  if (!Array.isArray(merged.customWallpapers)) {
+    merged.customWallpapers = [];
+  }
+
+  if (!Array.isArray(merged.searchHistory)) {
+    merged.searchHistory = [];
+  }
+
+  const hasSelectedEngine = merged.searchEngines.some(
+    (engine) => engine.name === merged.selectedEngine
+  );
+  if (!hasSelectedEngine) {
+    merged.selectedEngine = merged.searchEngines[0]?.name ?? defaultSettings.selectedEngine;
+  }
+
+  return merged;
+};
+
 export const loadSettings = (defaultSettings: UserSettings): UserSettings => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -19,11 +64,7 @@ export const loadSettings = (defaultSettings: UserSettings): UserSettings => {
     }
 
     const parsed = JSON.parse(stored);
-    // Merge default settings with stored settings to ensure new config items have default values
-    return {
-      ...defaultSettings,
-      ...parsed,
-    };
+    return normalizeSettings(defaultSettings, parsed);
   } catch (error) {
     console.error('Failed to load settings:', error);
     return defaultSettings;
@@ -51,8 +92,8 @@ const checkStorageQuota = (dataSize: number): boolean => {
   try {
     // Calculate currently used space
     let currentSize = 0;
-    for (let key in localStorage) {
-      if (localStorage.hasOwnProperty(key)) {
+    for (const key in localStorage) {
+      if (Object.prototype.hasOwnProperty.call(localStorage, key)) {
         currentSize += getDataSize(localStorage[key] + key);
       }
     }

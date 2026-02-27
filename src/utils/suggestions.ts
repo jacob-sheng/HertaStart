@@ -1,76 +1,85 @@
+import type {
+  SearchEngineConfig} from '@/config/searchEngines';
 import {
-  getSearchEngineConfig,
+  buildFetchUrl,
   buildJsonpUrl,
-  type SearchEngineType
+  getSearchEngineConfig
 } from '@/config/searchEngines';
 
+declare global {
+  interface Window {
+    __AEROSTART_JSONP__?: Record<string, (data: unknown) => void>;
+  }
+}
+
 let callbackCount = 0;
+const REQUEST_TIMEOUT_MS = 3000;
 
-/**
- * Fetch search suggestions (supports hybrid JSONP and Fetch mode)
- */
-export const fetchSuggestions = (engine: string, query: string): Promise<string[]> => {
-  return new Promise((resolve) => {
-    if (!query || !query.trim()) {
-      resolve([]);
-      return;
-    }
+const withTimeout = async <T>(
+  promise: Promise<T>,
+  timeout = REQUEST_TIMEOUT_MS
+): Promise<T> => {
+  return await Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error('Suggestions request timed out')), timeout)
+    ),
+  ]);
+};
 
-    const config = getSearchEngineConfig(engine as SearchEngineType);
-    if (!config) {
-      resolve([]);
-      return;
-    }
+const fetchWithProxy = async (
+  config: SearchEngineConfig,
+  query: string
+): Promise<string[]> => {
+  const response = await withTimeout(fetch(buildFetchUrl(config, query)));
+  if (!response.ok) {
+    return [];
+  }
+  const data = (await response.json()) as unknown;
+  return config.parseResponse(data);
+};
 
-    // Bilibili uses fetch (via Vite proxy in dev, Vercel Function in production)
-    if (engine === 'Bilibili') {
-      const url = `/api/bilibili?term=${encodeURIComponent(query)}`;
-
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          try {
-            const suggestions = config.parseResponse(data);
-            resolve(suggestions);
-          } catch (e) {
-            resolve([]);
-          }
-        })
-        .catch(() => {
-          resolve([]);
-        });
-      return;
-    }
-
-    // Other engines use JSONP
+const fetchWithJsonp = async (
+  config: SearchEngineConfig,
+  query: string
+): Promise<string[]> => {
+  return await new Promise<string[]>((resolve) => {
+    const callbackRegistry = window as unknown as Record<
+      string,
+      ((data: unknown) => void) | undefined
+    >;
     const callbackName = `jsonp_cb_${Date.now()}_${callbackCount++}`;
     const script = document.createElement('script');
-    let timeoutId: any;
-
-    const cleanup = () => {
-      if ((window as any)[callbackName]) delete (window as any)[callbackName];
-      if (document.body.contains(script)) document.body.removeChild(script);
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-
-    // 3 seconds timeout
-    timeoutId = setTimeout(() => {
+    const timeoutId = window.setTimeout(() => {
       cleanup();
       resolve([]);
-    }, 3000);
+    }, REQUEST_TIMEOUT_MS);
 
-    // Set global callback function
-    (window as any)[callbackName] = (data: any) => {
-      cleanup();
-      try {
-        const suggestions = config.parseResponse(data);
-        resolve(suggestions);
-      } catch (e) {
-        resolve([]);
+    const cleanup = () => {
+      const jsonpCallbacks = window.__AEROSTART_JSONP__;
+      if (jsonpCallbacks && jsonpCallbacks[callbackName]) {
+        delete jsonpCallbacks[callbackName];
       }
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+      window.clearTimeout(timeoutId);
     };
 
-    // Build URL and make request
+    window.__AEROSTART_JSONP__ = window.__AEROSTART_JSONP__ ?? {};
+    window.__AEROSTART_JSONP__[callbackName] = (data: unknown) => {
+      cleanup();
+      resolve(config.parseResponse(data));
+    };
+
+    callbackRegistry[callbackName] = (data: unknown) => {
+      const callbacks = window.__AEROSTART_JSONP__;
+      if (callbacks && callbacks[callbackName]) {
+        callbacks[callbackName](data);
+      }
+      delete callbackRegistry[callbackName];
+    };
+
     script.src = buildJsonpUrl(config, query, callbackName);
     script.onerror = () => {
       cleanup();
@@ -78,4 +87,28 @@ export const fetchSuggestions = (engine: string, query: string): Promise<string[
     };
     document.body.appendChild(script);
   });
+};
+
+export const fetchSuggestions = async (
+  engine: string,
+  query: string
+): Promise<string[]> => {
+  const normalized = query.trim();
+  if (!normalized) {
+    return [];
+  }
+
+  const config = getSearchEngineConfig(engine);
+  if (!config) {
+    return [];
+  }
+
+  try {
+    if (config.method === 'fetch') {
+      return await fetchWithProxy(config, normalized);
+    }
+    return await fetchWithJsonp(config, normalized);
+  } catch {
+    return [];
+  }
 };

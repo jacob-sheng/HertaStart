@@ -1,4 +1,4 @@
-import { Translation } from '../types';
+import type { Translation } from '../types';
 
 export const en: Translation = {
   // Common
@@ -76,6 +76,7 @@ export const en: Translation = {
   invalidUrlFormat: 'Invalid URL format',
   unsupportedProtocol: 'Only HTTP or HTTPS protocol links are supported',
   invalidSearchUrl: 'Generated search URL is invalid',
+  invalidSvgIcon: 'Invalid or unsafe SVG icon code',
   copyFailed: 'Copy failed',
   cutFailed: 'Cut failed',
   cannotReadClipboard: 'Cannot read clipboard',

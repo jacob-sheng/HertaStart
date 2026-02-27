@@ -1,6 +1,6 @@
 import React from 'react';
 import { XIcon } from './Icons';
-import { UserSettings, SettingsSection } from '../types';
+import type { UserSettings, SettingsSection, UpdateSettings } from '../types';
 import ThemeSettings from './ThemeSettings';
 import WallpaperManager from './WallpaperManager';
 import SearchEngineManager from './SearchEngineManager';
@@ -10,7 +10,7 @@ interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   settings: UserSettings;
-  onUpdateSettings: (newSettings: UserSettings) => void;
+  onUpdateSettings: UpdateSettings;
   section: SettingsSection;
 }
 
